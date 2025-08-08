@@ -1,0 +1,59 @@
+<div class="row mx-5">
+  @if (isLoader)
+  {
+    <div class="col-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-border text-secondary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-border text-success" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-border text-danger" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-border text-info" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <div class="spinner-border text-dark" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+
+  @else
+  {
+
+    <div class="row mx-5">
+      @for (item of designationList; track $index)
+      {
+        <div class="col-3">
+
+          <div class="card">
+            <!-- <h5 class="card-header">Featured</h5> -->
+            <div class="card-body">
+              <h4 class="card-title"> {{item.designation}}</h4>
+              <p class="card-text">
+              </p>
+
+              <a href="#" class="card-link">edit</a>
+              <a href="#" class="card-link">delete</a>
+            </div>
+
+          </div>
+        </div>
+
+
+      }
+    </div>
+  }
+</div>

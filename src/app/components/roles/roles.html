@@ -1,0 +1,67 @@
+<!-- <p>roles works!</p>
+
+<div class="row">
+  <div class="col-3">
+    <p>{{currentDate}}</p>
+  </div>
+  <div class="col-3">
+    <p>
+      {{version}}
+    </p>
+  </div>
+  <div class="col-3">
+    <p>
+      {{is_Active}}
+    </p>
+  </div>
+</div>
+<p>{{firstName}}</p>
+<p>{{currentDate}}</p>
+<p>{{is_Active}}</p>
+
+ other type of interpolation used to set the attributes of tags maily forms  -->
+<!-- 
+<div class="row">
+  <div class="col-3">
+    <input type="text" [value]="firstName">
+     the value of value attribute cna be dynamically set using above method 
+  </div>
+
+  <div class="col-3">
+    <input [type]="inputType">
+  </div>
+
+  <div class="col-3">
+    <input type="text" [(ngModel)]="firstName">
+  </div>
+
+
+
+</div>
+<div class="row">
+  <div class="col-3">
+
+    <button class="btn btn-success" (click)="showalert()"> show alert</button>
+  </div>
+</div> -->
+
+<!-- trying to print all the roles  -->
+
+<div *ngIf="loading" class="text-center">
+  Loading...
+</div>
+
+<div *ngIf="!loading">
+  <div class="row">
+    <div class="col-4">
+      <ul>
+        <li *ngFor="let item of roleList">{{item.role}}</li>
+      </ul>
+    </div>
+    <div class="col-4">
+      <select name="" id="">
+        <option *ngFor="let role of roleList" [value]="role.roleId">{{role.role}}</option>
+      </select>
+    </div>
+  </div>
+</div>

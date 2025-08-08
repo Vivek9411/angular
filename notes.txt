@@ -1,0 +1,57 @@
+angular is a single page application
+
+#  Creating a component 
+ng generate component componenet_name  or ng g c component name 
+
+
+
+
+
+
+
+
+
+********** importan things to remember ********************
+// string, number, boolern , date, object, array , null , undefined 
+// creating a variable 
+var_name: data_type  = value
+
+
+
+
+***** this is one way data bending *****
+
+**interpolation** 
+// only the variable created in this class can be accesed in the html of roles
+// to acces the value created in comopent class in that components html use {{}} # this is called as interpolation 
+
+
+to print the data
+use {{data_name}}  => data_name is defined in class inside the .ts file of that component 
+
+
+** property binding ** 
+to set the attribute dynamically use 
+[attribute_name]='variable' like => [class]="class_name" where class_name is variable defined in .ts class 
+
+
+
+***** two way data binding *****
+works only in input 
+imports: [FormsModule], # first import FormsModule
+then use <input type="text" [(ngModel)]="firstName"> [(mgmodel)]="varname" to use two way databinding 
+changes in input are rflected in variable in this case (firstname)
+
+
+
+
+*** to add event lister type thing *** 
+like on button click give alert 
+ showalert (){
+    alert("welcome to angular 20")
+  }
+
+  this is function defination and this goes in componen .ts file in side tht class 
+
+# using in html
+<button class="btn btn-success" (click)="showalert()"> show alert</button>  # inside the button tag add trigger type and then function which should be triggerd on that event
