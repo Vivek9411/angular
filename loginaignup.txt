@@ -1,0 +1,247 @@
+auth.service.ts
+
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export interface User {
+  id: number;
+  email: string;
+  role: string;
+  name: string;
+  [key: string]: any;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  private apiUriv1 = 'http://localhost:3000';
+  private currentUserSubject: BehaviorSubject<User | null>;
+  public currentUser: Observable<User | null>;
+
+  constructor(private http: HttpClient) {
+    const storedUser = localStorage.getItem('currentUser');
+    this.currentUserSubject = new BehaviorSubject<User | null>(storedUser ? JSON.parse(storedUser) : null);
+    this.currentUser = this.currentUserSubject.asObservable();
+  }
+
+  login(userName: string, password: string): Observable<User> {
+    return this.http.get<User[]>(`${this.apiUriv1}/users?username=${userName}&password=${password}`)
+      .pipe(
+        map(users => {
+          console.log(userName);
+          if (users.length > 0) {
+            const user = users[0];
+            console.log(user);
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            this.currentUserSubject.next(user);
+            return user;
+          }
+          throw new Error('Invalid credentials');
+        })
+      );
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+  }
+
+  getCurrentUser(): User | null {
+    return this.currentUserSubject.value;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getCurrentUser();
+  }
+
+  getUserRole(): string | null {
+    const user = this.getCurrentUser();
+    return user ? user.role : null;
+  }
+}
+
+
+
+
+
+signcomponentts
+
+
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../service/auth.service';
+
+@Component({
+  selector: 'app-signin',
+  templateUrl: './signin.html',
+  styleUrls: ['./signin.scss']
+})
+export class Signin implements OnInit {
+  signInForm: FormGroup;
+  isSubmitting = false;
+  errorMessage: string | null = null;
+
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    this.signInForm = this.fb.group({
+      username: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
+
+  ngOnInit(): void {
+    const user = localStorage.getItem('currentUser');
+    if (user) {
+      const userObj = JSON.parse(user);
+      if (userObj.role === 'Learner') {
+        this.router.navigate(['/learner']);
+      } else if (userObj.role === 'Admin') {
+        this.router.navigate(['/admin']);
+      } else {
+        this.router.navigate(['/author']);
+      }
+    }
+  }
+
+  onSubmit() {
+    if (this.signInForm.valid) {
+      this.authService.login(this.signInForm.get('username')?.value, this.signInForm.get('password')?.value).subscribe({
+        next: (user) => {
+          if (user.role === 'Admin') {
+            this.router.navigate(['/admin']);
+          } else if (user.role === 'Author') {
+            this.router.navigate(['/author']);
+          } else {
+            this.router.navigate(['/learner']);
+          }
+        },
+        error: (error) => {
+          this.errorMessage = 'Invalid email or password';
+        }
+      });
+    }
+  }
+
+  get email() { return this.signInForm.get('email'); }
+  get password() { return this.signInForm.get('password'); }
+}
+
+
+
+
+signup 
+
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+
+@Component({
+  selector: 'app-signup',
+  templateUrl: './signup.html',
+  styleUrls: ['./signup.scss']
+})
+export class Signup {
+  signUpForm: FormGroup;
+  isSubmitting = false;
+
+  constructor(private fb: FormBuilder, private http: HttpClient) {
+    this.signUpForm = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(8)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]]
+    });
+  }
+
+  onSubmit() {
+    if (this.signUpForm.valid) {
+      this.isSubmitting = true;
+      const user = {
+        username: this.signUpForm.value.username,
+        email: this.signUpForm.value.email,
+        password: this.signUpForm.value.password,
+        fullName: null,
+        avatarUrl: '',
+        joinDate: new Date().toISOString(),
+        role: 'Learner',
+        bio: null,
+        location: null
+      };
+
+      this.http.post('http://localhost:3000/users', user).subscribe({
+        next: (response) => {
+          console.log('User added:', response);
+          this.isSubmitting = false;
+          this.signUpForm.reset();
+        },
+        error: (err) => {
+          console.error('Error adding user:', err);
+          this.isSubmitting = false;
+        }
+      });
+    } else {
+      return;
+    }
+  }
+
+  getUsername() { return this.signUpForm.get('username'); }
+  getEmail() { return this.signUpForm.get('email'); }
+  getPassword() { return this.signUpForm.get('password'); }
+}
+
+
+
+auth guard 
+
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+import { AuthService } from '../service/auth.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(): boolean {
+    console.log(this.authService.isLoggedIn());
+    if (this.authService.isLoggedIn()) {
+      return true;
+    }
+
+    this.router.navigate(['/login']);
+    return false;
+  }
+}
+
+
+
+
+role guard 
+
+
+import { Injectable } from '@angular/core';
+import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { AuthService } from '../service/auth.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class RoleGuard implements CanActivate {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    const expectedRole = route.data['expectedRole'];
+    const userRole = this.authService.getUserRole();
+
+    if (userRole === expectedRole) {
+      return true;
+    }
+
+    this.router.navigate(['/login']);
+    return false;
+  }
+}
