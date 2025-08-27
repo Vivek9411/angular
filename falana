@@ -1,0 +1,187 @@
+<div class="wrapper container-fluid p-0">
+  <div class="row m-0 min-vh-100">
+    
+    <!-- Left Image Section -->
+    <div class="col-md-6 image-box d-flex justify-content-center align-items-center">
+      <app-font-left></app-font-left>
+    </div>
+
+    <!-- Right Login Section -->
+    <div class="col-md-6 login-box d-flex justify-content-center align-items-center">
+      <form class="auth-form">
+        
+        <!-- Product Title -->
+        <div class="mb-4">
+          <h3 class="title-col">Product name</h3>
+        </div>
+        
+        <!-- Welcome Text -->
+        <div class="mb-3">
+          <h4 class="welcome-text m-0">Welcome!</h4>
+          <p class="subtitle m-0">Sign in to your Learning account</p>
+        </div>
+
+        <!-- Username -->
+        <div class="mb-3">
+          <input type="email" class="input-box" placeholder="User Name" />
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <input type="password" class="input-box" placeholder="Password" />
+        </div>
+
+        <!-- Remember me + Forgot -->
+        <div class="mb-3 d-flex flex-column gap-2">
+          <div class="d-flex align-items-center gap-2">
+            <input type="checkbox" class="form-check-input" id="remember" />
+            <label for="remember" class="form-check-text">Remember me</label>
+          </div>
+          <a routerLink="/signup" class="forgot-link">Forgot password?</a>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-login">SIGN IN</button>
+
+        <!-- Register -->
+        <div class="register-text mt-3">
+          Don’t have an account? <a href="#">Register now</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+/* General wrapper */
+.wrapper {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Left and Right Sections */
+.image-box {
+  background-color: #4C7D77;
+  min-height: 100vh;
+}
+
+.login-box {
+  background: #2A2C38;
+  min-height: 100vh;
+}
+
+/* Headings */
+.title-col {
+  color: #4C7D77;
+}
+
+.welcome-text {
+  font-size: 30px;
+  color: #ACC5E7;
+}
+
+.subtitle {
+  color: #67778B;
+}
+
+/* Form */
+.auth-form {
+  width: 100%;
+  max-width: 400px;
+  padding: 1.5rem 1rem;
+}
+
+.input-box {
+  width: 100%;
+  height: 48px;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: #2A2C38;
+  border: 1px solid #616576;
+  color: #fff;
+
+  &::placeholder {
+    color: #858585;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #4C7D77;
+  }
+}
+
+/* Remember + forgot */
+.form-check-text {
+  color: #ACC5E7;
+  font-size: 14px;
+}
+
+.forgot-link {
+  font-size: 14px;
+  color: #ACC5E7;
+  text-decoration: none;
+
+  &:hover {
+    color: #4C7D77;
+  }
+}
+
+/* Button */
+.btn-login {
+  display: block;
+  width: 40%;
+  height: 48px;
+  margin: 2rem 0 0;
+  background: #405956;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+
+  &:hover {
+    background: #4e6b68;
+  }
+}
+
+/* Register text */
+.register-text {
+  font-size: 14px;
+  color: #fff;
+
+  a {
+    color: #4C7D77;
+    text-decoration: none;
+    &:hover {
+      color: #ACC5E7;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-box {
+    min-height: 50vh;
+  }
+  .auth-form {
+    max-width: 100%;
+    padding: 1rem;
+  }
+  .welcome-text {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-form {
+    padding: 0.8rem;
+  }
+  .welcome-text {
+    font-size: 22px;
+  }
+  .image-box {
+    min-height: 40vh;
+  }
+  .login-box {
+    min-height: 60vh;
+  }
+}
+
+
